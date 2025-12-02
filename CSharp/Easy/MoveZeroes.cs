@@ -1,74 +1,46 @@
-// Problem: Move Zeroes
-// Link: https://leetcode.com/problems/move-zeroes/
+// Problem: Binary Search
+// Link: https://leetcode.com/problems/binary-search/
 //
 // Task:
-// Given an integer array `nums`, move all zeros to the end of the array
-// while maintaining the relative order of non-zero elements.
-// Modify the array in-place.
+// Given a sorted array of integers `nums` and an integer `target`,
+// return the index of `target` if it exists in the array. Otherwise, return -1.
 //
 // Example:
-// Input: nums = [0,1,0,3,12]
-// Output: [1,3,12,0,0]
+// Input: nums = [-1,0,3,5,9,12], target = 9
+// Output: 4
 
 using System;
 
-public class MoveZeroesSolutions
+public class BinarySearchSolution
 {
     // ------------------------------------------------------------
-    // Solution 1: Brute Force 
+    // Solution: Iterative Binary Search
     // ------------------------------------------------------------
-    // Time Complexity: O(n^2)
+    // Time Complexity: O(log n)
     // Space Complexity: O(1)
     // Explanation:
-    //   When a zero is found, scan forward to find a non-zero
-    //   and swap positions.
+    //   Use two pointers (left and right) to repeatedly divide the search space.
+    //   Compare the middle element with the target and narrow down the range
+    //   accordingly until the target is found or range becomes empty.
     // ------------------------------------------------------------
-    public static void MoveZeroesBruteForce(int[] nums)
+    public static int BinarySearch(int[] nums, int target)
     {
-        for (int i = 0; i < nums.Length; i++)
-        {
-            if (nums[i] == 0)
-            {
-                for (int j = i + 1; j < nums.Length; j++)
-                {
-                    if (nums[j] != 0)
-                    {
-                        (nums[i], nums[j]) = (nums[j], nums[i]); // swap
-                        break;
-                    }
-                }
-            }
-        }
-    }
+        int left = 0;
+        int right = nums.Length - 1;
 
-    // ------------------------------------------------------------
-    // Solution 2: Two-Pointer 
-    // ------------------------------------------------------------
-    // Time Complexity: O(n)
-    // Space Complexity: O(1)
-    // Explanation:
-    //   - Move all non-zero values to the front
-    //   - Fill the remaining positions with zeros
-    // ------------------------------------------------------------
-    public static void MoveZeroes(int[] nums)
-    {
-        int insertPos = 0; // index to place next non-zero
-
-        // Move all non-zero elements forward
-        foreach (int num in nums)
+        while (left <= right)
         {
-            if (num != 0)
-            {
-                nums[insertPos] = num;
-                insertPos++;
-            }
+            int mid = left + (right - left) / 2; 
+
+            if (nums[mid] == target)
+                return mid;
+            else if (nums[mid] < target)
+                left = mid + 1; 
+            else
+                right = mid - 1; 
         }
 
-        // Fill the rest with zeros
-        for (int i = insertPos; i < nums.Length; i++)
-        {
-            nums[i] = 0;
-        }
+        return -1; 
     }
 
     // ------------------------------------------------------------
@@ -76,13 +48,12 @@ public class MoveZeroesSolutions
     // ------------------------------------------------------------
     public static void Main()
     {
-        int[] nums1 = { 0, 1, 0, 3, 12 };
-        int[] nums2 = { 0, 1, 0, 3, 12 };
+        int[] nums = { -1, 0, 3, 5, 9, 12 };
+        int target = 9;
 
-        MoveZeroesBruteForce(nums1);
-        MoveZeroes(nums2);
-
-        Console.WriteLine("Brute Force: [" + string.Join(", ", nums1) + "]");
-        Console.WriteLine("Optimal:     [" + string.Join(", ", nums2) + "]");
+        int result = BinarySearch(nums, target);
+        Console.WriteLine("Input: [" + string.Join(", ", nums) + "]");
+        Console.WriteLine("Target: " + target);
+        Console.WriteLine("Output: " + result); // Expected: 4
     }
 }
